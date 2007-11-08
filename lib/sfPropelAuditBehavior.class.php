@@ -77,7 +77,7 @@ class sfPropelAuditBehavior
       }
     }
     
-    $this->save($class, $values->getPrimaryKey(), serialize($changes), $con->getLastExecutedQuery(), self::TYPE_UPDATE);
+    $this->save($class, $values->getPrimaryKey(), serialize($changes), $con->lastQuery, self::TYPE_UPDATE);
     
     return true;
   }
@@ -98,7 +98,7 @@ class sfPropelAuditBehavior
       return false;
     }
     
-    $this->save(get_class($values), $values->getPrimaryKey(), null, $con->getLastExecutedQuery(), self::TYPE_ADD);
+    $this->save(get_class($values), $values->getPrimaryKey(), null, $con->lastQuery, self::TYPE_ADD);
   }
 
   /**
@@ -115,7 +115,7 @@ class sfPropelAuditBehavior
       return false;
     }
     
-    $this->save(get_class($object), $object->getPrimaryKey(), null, $con->getLastExecutedQuery(), self::TYPE_DELETE);
+    $this->save(get_class($object), $object->getPrimaryKey(), null, $con->lastQuery, self::TYPE_DELETE);
   }
 
   /**
@@ -174,7 +174,7 @@ class sfPropelAuditBehavior
       {
         // Skip RFC 1918 IP's 10.0.0.0/8, 172.16.0.0/12 and
         // 192.168.0.0/16
-        if (!eregi('^(10|172\.16|192\.168)\.', $ips[$i])) 
+        if (!preg_match('/^(10|172\.16|192\.168).*$/', $ips[$i]))
         {
           $ip = $ips[$i];
           break;
@@ -182,6 +182,7 @@ class sfPropelAuditBehavior
       }
     }
     
-    return ($ip ? $ip : isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1'); // Return with the found IP, the remote address or the local loopback address
+    // Return with the found IP, the remote address or the local loopback address
+    return ($ip ? $ip : isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1'); 
   }
 }
