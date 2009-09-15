@@ -15,8 +15,8 @@ class sfAudit extends BasesfAudit
 
         if (is_string($changes) && strlen($changes)) {
             $ret = unserialize($changes);
-        } // End if
+        }
+        return $ret;
+    }
 
-    } // End function
-
-} // End class
+}
